@@ -46,6 +46,7 @@ layout_uv_pyenv() {
 (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/vrao/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
+# brew install direnv
 direnv hook zsh 
 
 export JIRA_AUTH_TYPE=bearer
