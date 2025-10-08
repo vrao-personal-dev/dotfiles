@@ -47,7 +47,7 @@ layout_uv_pyenv() {
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # brew install direnv
-direnv hook zsh 
+eval "$(direnv hook zsh)"
 
 export JIRA_AUTH_TYPE=bearer
 export JIRA_API_TOKEN=
