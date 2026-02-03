@@ -1,0 +1,45 @@
+# git completions using zsh completions compinit--> make sure file on fpath, w/ brew a good place is /opt/homebrew/share/zsh/site-functions
+_git_commit_completions() {
+    autoload -Uz _git
+
+    # -------------------------------
+    # Determine the "subcommand" word
+    # -------------------------------
+    local subcmd
+    if [[ $words[1] == git ]]; then
+        subcmd=${words[2]}
+    else
+        # If this is an alias, treat it like 'git <alias maps to subcmd>'
+        # Map the alias -> git subcommand
+        case $words[1] in
+            gco) subcmd=checkout ;;
+            gch) subcmd=checkout ;;
+            gdf) subcmd=diff ;;
+            glo|glo1) subcmd=log ;;
+            gbr) subcmd=branch ;;
+            *)
+                subcmd=${words[2]}  # fallback
+                ;;
+        esac
+    fi
+
+    # -------------------------------
+    # Case logic (commit-aware commands)
+    # -------------------------------
+    case $subcmd in
+        show|checkout|reset|revert|cherry-pick|switch|log|diff)
+            git -C . rev-parse --is-inside-work-tree &>/dev/null || return 1
+
+            local -a commits
+            commits=("${(f)$(git --no-pager log --pretty=format:'%h:%s' -n 20)}")
+
+            # Only commits, no files mixed in
+            _describe -t commits -V 'commit' commits
+            return
+            ;;
+        *)
+            _git
+            return
+            ;;
+    esac
+}
