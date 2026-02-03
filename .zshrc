@@ -2,6 +2,7 @@
 bindkey \^K kill-line
 WORDCHARS=""
 
+setopt COMPLETE_ALIASES  # kinda flaky
 alias gbr='git branch'
 alias gcm='git commit'
 alias gdf='git diff --minimal '
@@ -28,6 +29,13 @@ gco() {
 }
 gme() {gh pr status | grep -A 10 'Requesting a code review from you'}
 
+# completions --> needs _git_commit_completions in right place
+autoload -Uz _git_commit_completions 
+autoload -Uz compinit compdef
+compinit
+compdef _git_commit_completions git 
+compdef _git_commit_completions gbr gdf gch glo glo1 
+
 alias less='less -S'
 alias run-help=man
 alias which-command=whence
@@ -53,15 +61,25 @@ export JIRA_AUTH_TYPE=bearer
 export JIRA_API_TOKEN=
 alias jcreateraw='somehow jira api it'
 
+# aider
+alias aid_goog_open='aider --model o3 --api-key openai="$(security find-generic-password -s 'openai-key' -w)" --model gemini-3-pro-preview --api-key google="$(security find-generic-password -s 'gemini-key' -w)"'
+
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PIPENV_PYTHON="$PYENV_ROOT/shims/python"
 
 eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+
+. "$HOME/.local/bin/env"
+
+alias uv='uv --no-python-downloads'
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/vrao/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/vrao/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/vrao/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/vrao/Downloads/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/vrao/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/vrao/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/Users/vrao/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/vrao/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
