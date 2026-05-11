@@ -12,6 +12,7 @@ alias gfm='git fetch origin master:master'
 alias gch='git checkout '
 alias glo='git log --oneline -n 5'
 alias glo1='git log --oneline -n '
+alias gpr='GH_FORCE_TTY=1 gh pr view | tail -2 | grep -o "https://[^ ]*" | pbcopy'
 gsn() {git stash apply stash^{/"$1"} }
 
 # brew install gh
