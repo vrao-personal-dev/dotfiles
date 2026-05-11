@@ -3,6 +3,7 @@ autocmd FileType gitcommit setlocal textwidth=72
 " Optionally, highlight the first 50 chars (subject line)
 autocmd FileType gitcommit setlocal colorcolumn=50
 set number 
+set numberwidth=1
 
 " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 "     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
