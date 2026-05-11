@@ -32,7 +32,12 @@ gme() {gh pr status | grep -A 10 'Requesting a code review from you'}
 # completions --> needs _git_commit_completions in right place
 autoload -Uz _git_commit_completions 
 autoload -Uz compinit compdef
-compinit
+# only run compinit once daily
+if [ -z "$(find ~/.zcompdump -mtime -1)" ]; then
+    compinit
+else
+    compinit -C
+fi
 compdef _git_commit_completions git 
 compdef _git_commit_completions gbr gdf gch glo glo1 
 
@@ -51,7 +56,6 @@ layout_uv_pyenv() {
     fi
 }
 
-(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/vrao/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # brew install direnv
@@ -62,7 +66,7 @@ export JIRA_API_TOKEN=
 alias jcreateraw='somehow jira api it'
 
 # aider
-alias aid_goog_open='aider --model o3 --api-key openai="$(security find-generic-password -s 'openai-key' -w)" --model gemini-3-pro-preview --api-key google="$(security find-generic-password -s 'gemini-key' -w)"'
+alias aid_goog_open='aider --model o3 --api-key openai="$(security find-generic-password -s 'openai-key' -w)" --model gemini-3-pro-preview --api-key google="$(security find-generic-password -s 'gemini-key' -w)" --model claude-sonnet-4-6 --api-key anthropic="$(security find-generic-password -s 'anthropic-key' -w)"'
 
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
@@ -81,5 +85,9 @@ if [ -f '/Users/vrao/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/
 if [ -f '/Users/vrao/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/vrao/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+nvm() {
+    unfunction nvm
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    nvm "$@"
+}
