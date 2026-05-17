@@ -4,6 +4,7 @@ autocmd FileType gitcommit setlocal textwidth=72
 autocmd FileType gitcommit setlocal colorcolumn=50
 set number 
 set numberwidth=1
+set clipboard=unnamed
 
 " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 "     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
