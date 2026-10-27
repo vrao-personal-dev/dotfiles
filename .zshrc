@@ -12,11 +12,15 @@ alias gfm='git fetch origin master:master'
 alias gch='git checkout '
 alias glo='git log --oneline -n 5'
 alias glo1='git log --oneline -n '
-alias gpr='GH_FORCE_TTY=1 gh pr view | tail -2 | grep -o "https://[^ ]*" | pbcopy'
+gpr() {GH_FORCE_TTY=1 gh pr view "${1:-}" | tail -2 | grep -o "https://[^ ]*" | pbcopy }
 gsn() {git stash apply stash^{/"$1"} }
 
 # brew install gh
 alias gh='EDITOR=vim gh'
+
+# gh profiles
+alias GH='gh auth login --hostname github.com --with-token <<< $(security find-generic-password -s gh-personal-token -w)'
+alias GH_FRAMEBOOK='gh auth login --hostname github.com --with-token <<< $(security find-generic-password -s gh-framebook-token -w)'
 
 # git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 # ~/.fzf/install
@@ -41,6 +45,10 @@ else
 fi
 compdef _git_commit_completions git 
 compdef _git_commit_completions gbr gdf gch glo glo1 
+
+# wrap pasted text
+autoload -Uz bracketed-paste-magic
+zle -N bracketed-paste bracketed-paste-magic
 
 alias less='less -S'
 alias run-help=man
@@ -92,3 +100,8 @@ nvm() {
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
     nvm "$@"
 }
+
+# erlang rebar3
+export PATH=/Users/vrao/.cache/rebar3/bin:$PATH
+
+export PATH="/Users/vrao/.stripe/bin:$PATH"
