@@ -28,12 +28,13 @@ _git_commit_completions() {
     case $subcmd in
         show|checkout|reset|revert|cherry-pick|switch|log|diff)
             git -C . rev-parse --is-inside-work-tree &>/dev/null || return 1
+            git rev-parse --verify -q HEAD &>/dev/null || return 1
 
             local -a commits
             commits=("${(f)$(git --no-pager log --pretty=format:'%h:%s' -n 20)}")
 
             case $subcmd in
-                (diff)
+                (diff|log)
                     commits+=(${(f)"$(git diff --name-only --relative 2>/dev/null)"})
                     # Only commits and changed files
                     _describe -t commits -V 'commit' commits
