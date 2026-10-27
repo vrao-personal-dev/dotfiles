@@ -34,11 +34,16 @@ _git_commit_completions() {
             commits=("${(f)$(git --no-pager log --pretty=format:'%h:%s' -n 20)}")
 
             case $subcmd in
-                (diff|log)
+                (diff)
                     commits+=(${(f)"$(git diff --name-only --relative 2>/dev/null)"})
                     # Only commits and changed files
                     _describe -t commits -V 'commit' commits
                     ;;
+	        (log)
+		    commits=(${(f)"$(git ls-files 2>/dev/null)"})
+		    # Only changed files
+		    _describe -t commits -V 'commit' commits
+		    ;;
                 (*)
                     # Only commits, no files mixed in
                     _describe -t commits -V 'commit' commits
